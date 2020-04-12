@@ -23,7 +23,6 @@ import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
 
     private Button loginButton, phoneLoginButton;
@@ -37,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
 
         initializeFields();
 
@@ -56,13 +54,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (currentUser != null) {
-            sendUserToMainActivity();
-        }
+    private void initializeFields() {
+        loginButton = findViewById(R.id.login_button);
+        phoneLoginButton = findViewById(R.id.login_phone_button);
+        userEmail = findViewById(R.id.login_email);
+        userPassword = findViewById(R.id.login_password);
+        needNewAccountLink = findViewById(R.id.login_sign_up);
+        forgotPasswordLink = findViewById(R.id.login_forgot_password);
+        progressBar  = findViewById(R.id.login_progress);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void allowUserToLogin() {
@@ -97,8 +97,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendUserToMainActivity() {
-        Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(loginIntent);
+        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
         finish();
     }
 
@@ -108,14 +109,4 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void initializeFields() {
-        loginButton = findViewById(R.id.login_button);
-        phoneLoginButton = findViewById(R.id.login_phone_button);
-        userEmail = findViewById(R.id.login_email);
-        userPassword = findViewById(R.id.login_password);
-        needNewAccountLink = findViewById(R.id.login_sign_up);
-        forgotPasswordLink = findViewById(R.id.login_forgot_password);
-        progressBar  = findViewById(R.id.login_progress);
-        progressBar.setVisibility(View.GONE);
-    }
 }

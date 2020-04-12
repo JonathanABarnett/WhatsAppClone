@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -28,12 +30,17 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView alreadyHaveAccountLink;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference rootRef;
+
     private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
+        rootRef = FirebaseDatabase.getInstance().getReference();
 
         initializeFields();
 
@@ -49,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth = FirebaseAuth.getInstance();
+
                 createNewAccount();
             }
         });
@@ -63,12 +70,6 @@ public class RegisterActivity extends AppCompatActivity {
         alreadyHaveAccountLink = findViewById(R.id.register_already_have_account);
         progressBar  = findViewById(R.id.register_progress);
         progressBar.setVisibility(View.GONE);
-    }
-
-    private void sendUserToLoginActivity() {
-        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(loginIntent);
-        finish();
     }
 
     private void createNewAccount() {
@@ -89,7 +90,10 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        sendUserToLoginActivity();
+                        String currentUserID = mAuth.getCurrentUser().getUid();
+                        rootRef.child("Users").child(currentUserID).setValue("");
+
+                        sendUserToMainActivity();
                         Toast.makeText(RegisterActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     } else {
@@ -100,6 +104,19 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendUserToLoginActivity() {
+        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+    }
+
+    private void sendUserToMainActivity() {
+        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
     }
 
 }
