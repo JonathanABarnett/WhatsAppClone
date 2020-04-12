@@ -45,7 +45,6 @@
         android:layout_marginRight="18dp"
         android:layout_marginLeft="18dp" />
 
-
     <Button
         android:id="@+id/register_button"
         android:layout_width="match_parent"
@@ -76,5 +75,15 @@
         android:layout_marginTop="18dp"
         android:layout_marginRight="18dp"
         android:layout_marginLeft="18dp" />
+
+    <ProgressBar
+        android:id="@+id/register_progress"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/register_image"
+        style="@style/Widget.AppCompat.Spinner"
+        android:max="100"
+        android:background="@color/colorPrimaryDark"/>
 
 </RelativeLayout>
