@@ -1,16 +1,21 @@
 package com.alaythiaproductions.whatsappclone;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -96,6 +101,46 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void createNewGroup(String groupName) {
+        rootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, groupName + " created successfully!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void requestNewGroup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Group Name: ");
+        final EditText groupNameField = new EditText(MainActivity.this);
+        groupNameField.setHint("e.g. The Cool Kids");
+        builder.setView(groupNameField);
+
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String groupname = groupNameField.getText().toString().trim();
+
+                if (groupname.equals("")) {
+                    Toast.makeText(MainActivity.this, "Please enter a Group Name", Toast.LENGTH_SHORT).show();
+                } else {
+                    createNewGroup(groupname);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,6 +160,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.main_settings_option) {
             sendUserToSettingsActivity();
+        }
+        if (item.getItemId() == R.id.main_create_group) {
+            requestNewGroup();
         }
         if (item.getItemId() == R.id.main_find_friends_option) {
 
