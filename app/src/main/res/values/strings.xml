@@ -18,4 +18,5 @@
     <string name="logout">Logout</string>
     <string name="update">Update</string>
     <string name="profile">Profile</string>
+    <string name="write_message_here">Write message here...</string>
 </resources>
