@@ -19,4 +19,7 @@
     <string name="update">Update</string>
     <string name="profile">Profile</string>
     <string name="write_message_here">Write message here...</string>
+    <string name="enter_verification_number">Enter Verification Code</string>
+    <string name="send_verification_code">Send Verification Code</string>
+    <string name="verify">Verify</string>
 </resources>
