@@ -92,13 +92,20 @@ public class MainActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
-        finish();
+        //finish();
     }
+
     private void sendUserToSettingsActivity() {
         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingsIntent);
-        finish();
+        //finish();
+    }
+
+    private void sendUserToFindFriendsActivity() {
+        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
+        //finish();
     }
 
     private void createNewGroup(String groupName) {
@@ -122,12 +129,12 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String groupname = groupNameField.getText().toString().trim();
+                String groupName = groupNameField.getText().toString().trim();
 
-                if (groupname.equals("")) {
+                if (groupName.equals("")) {
                     Toast.makeText(MainActivity.this, "Please enter a Group Name", Toast.LENGTH_SHORT).show();
                 } else {
-                    createNewGroup(groupname);
+                    createNewGroup(groupName);
                 }
             }
         });
@@ -165,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             requestNewGroup();
         }
         if (item.getItemId() == R.id.main_find_friends_option) {
-
+            sendUserToFindFriendsActivity();
         }
 
         return true;
