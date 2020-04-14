@@ -151,6 +151,9 @@ public class ProfileActivity extends AppCompatActivity {
                     if (currentState.equals("request_received")) {
                         acceptChatRequest();
                     }
+                    if (currentState.equals("friends")) {
+                        removeSpecificContact();
+                    }
                 }
             });
         } else {
@@ -206,6 +209,31 @@ public class ProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     chatRequestRef.child(receiverUserId).child(senderUserId)
+                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                sendMessageRequestButton.setEnabled(true);
+                                sendMessageRequestButton.setText("Send Request");
+                                currentState = "new";
+
+                                declineRequestButton.setVisibility(View.INVISIBLE);
+                                declineRequestButton.setEnabled(false);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void removeSpecificContact() {
+        contactsRef.child(senderUserId).child(receiverUserId)
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    contactsRef.child(receiverUserId).child(senderUserId)
                             .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
