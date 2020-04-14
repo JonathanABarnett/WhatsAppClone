@@ -53,7 +53,7 @@ public class ChatsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         chatRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserId);
-usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         chatList = chatView.findViewById(R.id.fragment_chat_list);
         chatList.setLayoutManager(new LinearLayoutManager(getContext()));
