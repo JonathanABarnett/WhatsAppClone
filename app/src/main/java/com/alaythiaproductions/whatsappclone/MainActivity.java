@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
                             tab.setText("Contacts");
                             tab.setIcon(R.drawable.ic_pending);
                             break;
+                        case 3:
+                            tab.setText("Requests");
+                            tab.setIcon(R.drawable.ic_pending);
+                            break;
                     }
                 }
         );

@@ -22,4 +22,18 @@
     <string name="enter_verification_number">Enter Verification Code</string>
     <string name="send_verification_code">Send Verification Code</string>
     <string name="verify">Verify</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+    <string name="received">received</string>
+    <string name="send_request">send_request</string>
+    <string name="request_sent">request_sent</string>
+    <string name="request_received">request_received</string>
+    <string name="friends">friends</string>
+    <string name="new_request">new_request</string>
+    <string name="sent">sent</string>
+    <string name="saved">saved</string>
+    <string name="cancel_a_request">Cancel Request</string>
+    <string name="accept_a_request">Accept Request</string>
+    <string name="send_a_request">Send Request</string>
+    <string name="remove_contact">Remove Contact</string>
 </resources>

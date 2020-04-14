@@ -77,8 +77,8 @@ public class ContactsFragment extends Fragment {
                         if (dataSnapshot.hasChild("image")) {
                             String profImage = dataSnapshot.child("image").getValue().toString();
                             Picasso.get().load(profImage).placeholder(R.drawable.blank_profile_image).into(holder.profileImage);
-
                         }
+
                         String profileName = dataSnapshot.child("name").getValue().toString();
                         String profileStatus = dataSnapshot.child("status").getValue().toString();
                         holder.userName.setText(profileName);

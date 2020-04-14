@@ -24,6 +24,9 @@ public class TabsPagerAdapter extends FragmentStateAdapter {
             case 2:
                 ContactsFragment contactsFragment = new ContactsFragment();
                 return contactsFragment;
+            case 3:
+                RequestsFragment requestsFragment = new RequestsFragment();
+                return requestsFragment;
             default:
                 return null;
         }
@@ -31,7 +34,7 @@ public class TabsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 
 }
