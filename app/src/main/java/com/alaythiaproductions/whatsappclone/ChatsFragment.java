@@ -1,5 +1,6 @@
 package com.alaythiaproductions.whatsappclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -71,20 +72,33 @@ usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
             @Override
             protected void onBindViewHolder(@NonNull ChatViewHolder holder, int position, @NonNull Contacts model) {
                 final String userIds = getRef(position).getKey();
+                final String[] profImage = {"default_image"};
                 usersRef.child(userIds).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("image")) {
-                            String profImage = dataSnapshot.child("image").getValue().toString();
-                            Picasso.get().load(profImage).placeholder(R.drawable.blank_profile_image).into(holder.profileImage);
+                        if (dataSnapshot.exists()) {
+                            if (dataSnapshot.hasChild("image")) {
+                                profImage[0] = dataSnapshot.child("image").getValue().toString();
+                                Picasso.get().load(profImage[0]).placeholder(R.drawable.blank_profile_image).into(holder.profileImage);
+                            }
+
+                            String profileName = dataSnapshot.child("name").getValue().toString();
+                            String profileStatus = dataSnapshot.child("status").getValue().toString();
+
+                            holder.userName.setText(profileName);
+                            holder.userStatus.setText("Last Online:" + "\n" + "Date " + "Time" );
+
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                    chatIntent.putExtra("userIds", userIds);
+                                    chatIntent.putExtra("userName", profileName);
+                                    chatIntent.putExtra("userImage", profImage[0]);
+                                    startActivity(chatIntent);
+                                }
+                            });
                         }
-
-                        String profileName = dataSnapshot.child("name").getValue().toString();
-                        String profileStatus = dataSnapshot.child("status").getValue().toString();
-
-                        holder.userName.setText(profileName);
-                        holder.userStatus.setText("Last Online:" + "\n" + "Date " + "Time" );
-
                     }
 
                     @Override
