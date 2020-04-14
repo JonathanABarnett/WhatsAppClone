@@ -1,5 +1,7 @@
 package com.alaythiaproductions.whatsappclone;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +39,7 @@ public class RequestsFragment extends Fragment {
     private View requestFragmentView;
     private RecyclerView requestsList;
 
-    private DatabaseReference requestsRef, usersRef;
+    private DatabaseReference requestsRef, usersRef, contactsRef;
     private FirebaseAuth mAuth;
 
     private String currentUserId;
@@ -58,6 +63,7 @@ public class RequestsFragment extends Fragment {
         currentUserId = mAuth.getCurrentUser().getUid();
         requestsRef = FirebaseDatabase.getInstance().getReference().child("Requests");
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
 
         return requestFragmentView;
     }
@@ -97,7 +103,78 @@ public class RequestsFragment extends Fragment {
                                         String profileName = dataSnapshot.child("name").getValue().toString();
                                         String profileStatus = dataSnapshot.child("status").getValue().toString();
                                         holder.userName.setText(profileName);
-                                        holder.userStatus.setText(profileStatus);
+                                        holder.userStatus.setText("Would like to add you to their contacts");
+
+                                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                CharSequence options[] = new CharSequence[] {
+                                                        "Accept",
+                                                        "Deny"
+                                                };
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                builder.setTitle(profileName + " Contact Request");
+
+                                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if (which == 0) {
+                                                            contactsRef.child(currentUserId).child(userIds).child("Contact").setValue(getString(R.string.saved)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        requestsRef.child(currentUserId).child(userIds).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    requestsRef.child(userIds).child(currentUserId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(getContext(), "New Contact Added", Toast.LENGTH_SHORT).show();
+
+                                                                                            }
+
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                            }
+                                                                        });
+
+                                                                    }
+                                                                }
+                                                            });
+
+                                                        }
+                                                        if (which == 1) {
+                                                            contactsRef.child(currentUserId).child(userIds).child("Contact").setValue(getString(R.string.saved)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        requestsRef.child(currentUserId).child(userIds).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    requestsRef.child(userIds).child(currentUserId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(getContext(), "Contact Denied", Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                                builder.show();
+                                            }
+                                        });
                                     }
 
                                     @Override
